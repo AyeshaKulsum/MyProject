@@ -44,7 +44,7 @@ update people set age=12
 where people_first_name='Richie' and people_last_name='Rich';
 --Fetch all classes and respective class teacher's name and age
 select c.class_name, p.people_first_name || ', ' ||p.people_last_name as class_teacher_name,p.age from class c
-left join people p on p.people_id = c.class_teacher 
+left join people p on p.people_id = c.class_teacher; 
 
 --Fetch teachers, their subjects (a teacher can handle multiple subjects)
 SELECT p.people_first_name || ', ' ||p.people_last_name as teacher_name,
@@ -56,10 +56,20 @@ left join subject s on s.subject_id = sctm.subject_id and s.subject_status='Acti
 group by p.people_first_name ,p.people_last_name;
 
 --Add another table for teachers address
-added address in people table
+added address in people table;
 
 --Fetch all classes and respective class teacher's name, age and address
 select c.class_name, p.people_first_name || ', ' ||p.people_last_name as class_teacher_name,p.age,p.people_address from class c
-left join people p on p.people_id = c.class_teacher 
+left join people p on p.people_id = c.class_teacher; 
 
 --Read about joins and other basic db terminologies.
+--Index 
+CREATE INDEX people_id_index ON people USING BTREE(people_id);
+drop index people_id_index;
+
+CREATE INDEX people_first_name_index ON people USING BTREE(people_first_name);
+
+CREATE INDEX people_last_name_index ON people USING BTREE(people_first_name);
+
+--explain analyse
+explain analyse select * from people where people_first_name='Raymond' and people_last_name='Blake';
