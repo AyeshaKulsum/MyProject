@@ -1,14 +1,20 @@
 var Hapi = require('hapi');
 const dotenv = require('dotenv');
 dotenv.config({ path: './config.env' });
-const taskRoute = require('./routes/task')
+const designationRoute = require('./routes/designation')
 // create new server instance
 var server = new Hapi.Server()
 const port = process.env.PORT || 8000;
 
+//DB
+  const db =require('./config/database')
+  db.authenticate().then(()=>
+ console.log('DB Connection has been established successfully.'))
+ .catch(err=>console.error('Unable to connect to the database:', error))
+
 // add server’s connection information
 server.connection({
-  host: 'localhost',
+  host: process.env.HOST,
   port,
   routes: {
     //CORS by default false we can enable while creating server or route directly with or without properties
@@ -24,7 +30,7 @@ server.connection({
 })
 
 // tell your server about the defined routes
-server.route(taskRoute);
+server.route(designationRoute);
 
 // start your server
 server.start(function (err) {
