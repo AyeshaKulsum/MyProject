@@ -3,12 +3,12 @@
   const designationRoute = [  
     {
         method: 'GET',
-        path: '/',
+        path: '/designation',
         config: fetchAllDesignations
     },
     {
       method: 'GET',
-      path: '/{id}',
+      path: '/designation/{id}',
       config: fetchDesignationById
   },
   ];
