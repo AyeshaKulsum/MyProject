@@ -1,4 +1,4 @@
-const { Sequelize, DataTypes } = require('sequelize');
+const { Sequelize } = require('sequelize');
 const db = require('../config/database')
 
 const Designation = db.define('Designation', {
@@ -16,7 +16,7 @@ const Designation = db.define('Designation', {
 designation_status: {
     type: Sequelize.STRING,
     allowNull: false,
-    defaultValue:['Active','InActive']
+    defaultValue:'Active'
   }
 }, {
   // Other model options go here

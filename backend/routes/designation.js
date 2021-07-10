@@ -1,4 +1,4 @@
- const {fetchAllDesignations,fetchDesignationById} = require('../handlers/designation')
+ const {fetchAllDesignations,fetchDesignationById,addDesignation,updateDesignationById,fileTest} = require('../handlers/designation')
   
   const designationRoute = [  
     {
@@ -11,6 +11,22 @@
       path: '/designation/{id}',
       config: fetchDesignationById
   },
+  {
+    method: 'POST',
+    path: '/designation',
+    config: addDesignation
+},
+{
+  method: 'PUT',
+  path: '/designation',
+  config: updateDesignationById
+},
+
+{
+  method: 'POST',
+  path: '/file',
+  config: fileTest
+},
   ];
 
   module.exports = designationRoute
