@@ -59,9 +59,9 @@ describe('hooks', function () {
         .then(
           function (response) {
             let responsePayload = JSON.parse(response.payload)
-            assert.deepEqual(response.statusCode, 200);
-            expect(response.statusCode).to.equal(200);
-            expect(response.statusMessage).to.equal('OK');
+            assert.deepEqual(response.statusCode, 201);
+            expect(response.statusCode).to.equal(201);
+            expect(response.statusMessage).to.equal('Created');
             assert.strictEqual(responsePayload.message, 'Added new record');
             assert.strictEqual(responsePayload.status, 'success');
             assert.strictEqual(responsePayload.description.designation_status, 'Active');
@@ -78,7 +78,98 @@ describe('hooks', function () {
       })
         .then(
           function (response) {
+            let responsePayload = JSON.parse(response.payload)
             assert.deepEqual(response.statusCode, 400);
+            assert.deepEqual(responsePayload.error, 'Bad Request');
+            assert.deepEqual(responsePayload.validation.source, 'payload');
+            assert.deepEqual(responsePayload.validation.keys, ['value']);
+          }
+        )
+    })
+  })
+  describe('PUT designations', function () {
+    it('should validate if designation is saved', function () {
+      return server.injectThen({
+        method: 'PUT',
+        url: '/designation?id=1',
+        payload: {
+          designation_name: 'Head Master'
+        }, headers: {
+          username: 'Ayesha',
+        }
+      })
+        .then(
+          function (response) {
+            let responsePayload = JSON.parse(response.payload)
+            assert.deepEqual(response.statusCode, 200);
+            expect(response.statusCode).to.equal(200);
+            expect(response.statusMessage).to.equal('OK');
+            assert.strictEqual(responsePayload.message, 'Updated Sucessfully');
+            assert.strictEqual(responsePayload.status, 'success');
+          }
+        )
+    })
+
+    it('should throw bad request if required payload is not sent', function () {
+      return server.injectThen({
+        method: 'PUT',
+        url: '/designation?id=1',
+        headers: {
+          username: 'Ayesha',
+        }
+        ,
+        payload: {
+
+        }
+      })
+        .then(
+          function (response) {
+            let responsePayload = JSON.parse(response.payload)
+            assert.deepEqual(response.statusCode, 400);
+            assert.deepEqual(responsePayload.error, 'Bad Request');
+            assert.deepEqual(responsePayload.validation.source, 'payload');
+            assert.deepEqual(responsePayload.validation.keys, ['designation_name']);
+          }
+        )
+    })
+
+    it('should throw bad request if required headers is not sent', function () {
+      return server.injectThen({
+        method: 'PUT',
+        url: '/designation?id=1',
+        payload: {
+          designation_name: 'Head Master'
+        }
+      })
+        .then(
+          function (response) {
+            let responsePayload = JSON.parse(response.payload)
+            assert.deepEqual(response.statusCode, 400);
+            assert.deepEqual(responsePayload.error, 'Bad Request');
+            assert.deepEqual(responsePayload.validation.source, 'headers');
+            assert.deepEqual(responsePayload.validation.keys, ['username']);
+          }
+        )
+    })
+
+    it('should throw bad request if required query params is not sent', function () {
+      return server.injectThen({
+        method: 'PUT',
+        url: '/designation',
+        payload: {
+          designation_name: 'Head Master'
+        },
+        headers: {
+          username: 'Ayesha',
+        }
+      })
+        .then(
+          function (response) {
+            let responsePayload = JSON.parse(response.payload)
+            assert.deepEqual(response.statusCode, 400);
+            assert.deepEqual(responsePayload.error, 'Bad Request');
+            assert.deepEqual(responsePayload.validation.source, 'query');
+            assert.deepEqual(responsePayload.validation.keys, ['id']);
           }
         )
     })
@@ -121,23 +212,5 @@ describe('hooks', function () {
     //       });
     //     });
     //   });
-
-      // describe('GET /designation', () => {
-      //   it('should return the server status', async done => {
-      //     await testUtil(async () => {
-      //       const response = await fetch(`${config.apiUrl}/healthcheck`, {
-      //         method : 'GET'
-      //       });
-
-      //       const body = await response.json();
-
-      //       expect(response.ok).toBe(true);
-      //       expect(response.status).toBe(200);
-      //       expect(body.ping).toBe('pong');
-      //       expect(body.timestamp).toBeGreaterThan(0);
-      //       expect(body.database.healthy).toBe(true);
-      //     }, done);
-      //   });
-      // });
 
   // });

@@ -16,7 +16,7 @@ exports.addDesignation = async (request, reply) => {
     'message': 'Added new record',
     'status': 'success',
     description: des
-  })).catch(err => { throw Boom.internal('Add designation Failed', err); });
+  }).code(201)).catch(err => { throw Boom.internal('Add designation Failed', err); });
 }
 
 exports.updateDesignationById = async (request, reply) => {
