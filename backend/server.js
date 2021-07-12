@@ -10,7 +10,7 @@ const port = process.env.PORT || 8000;
   const db =require('./config/database')
   db.authenticate().then(()=>
  console.log('DB Connection has been established successfully.'))
- .catch(err=>console.error('Unable to connect to the database:', error))
+ .catch(err=>console.error('Unable to connect to the database:', err))
 
 // add server’s connection information
 server.connection({
@@ -42,6 +42,8 @@ server.start(function (err) {
 })
 
 process.on('unhandledRejection',(err)=>{
-  console.log(err);
+  console.log('Error :',err);
   process.exit(1);
 })
+
+module.exports = server;

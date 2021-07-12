@@ -1,66 +1,50 @@
 
-const Boom = require('boom');
+const Boom = require('@hapi/boom');
 const Designation = require('../model/designation');
-var Joi = require('joi')
 
-const DesignationHandler = {
-  fetchAllDesignations: {
-      handler: function (request, reply) {
-         Designation.findAll().then(des=>reply(des)).catch(err=>console.log(err));
-      }
-    },
-    fetchDesignationById:{
-      handler: function (request, reply) {
-        Designation.findByPk(request.params.id).then(des=>reply(des)).catch(err=>console.log(err));
-     },
-     validate: {
-      params: {
-         id: Joi.number().min(1).required()
-       }
-     }
-    },
-    addDesignation:{
-      handler: function (request, reply) {
-        Designation.create({designation_name:request.payload.designation_name}).then(des=>reply({
+
+  exports.fetchAllDesignations = async (request, reply) =>{
+        await Designation.findAll().then(des=>reply(des)).catch(err=>{throw Boom.internal('Failed to fetch all designations',err);});
+    }
+
+    exports.fetchDesignationById= async (request, reply)=> {
+      await Designation.findByPk(request.params.id).then(des=>reply(des)).catch(err=>{throw Boom.internal('Failed to fetch designation by id',err);});
+    }
+
+    exports.addDesignation= async (request, reply) =>{
+      await Designation.create({designation_name:request.payload.designation_name}).then(des=>reply({
           'message':'Added new record',
           'status':'success',
           description:des
-        })).catch(err=>console.log(err));
-     }
-    },updateDesignationById:{
-      handler: function (request, reply) {
-        Designation.update({designation_name:request.payload.designation_name},{
+        })).catch(err=>{throw Boom.internal('Add designation Failed',err);});
+    }
+    
+    exports.updateDesignationById = async (request, reply) => {
+      await  Designation.update({designation_name:request.payload.designation_name},{
           where:{
             designation_id:request.query.id
           }
-        }).then(des=>reply({
-          'message':'Updated Sucessfully',
-          'status':'success'
-        })).catch(err=>reply({
-          'message':'Updated Failed',
-          'status':'failed'
-        }));
-     },
-          validate: {
-            query: {
-              id: Joi.number().min(1).required()
-            },
-            payload: {
-              designation_name: Joi.string().min(3).max(100).required()
-            },headers: {
-              username: Joi.string().required(),
-            },
-            options: {
-              allowUnknown: true,
-              abortEarly: false
-            }
+        }).then(des=>{
+          if(des[0]==0)
+          {
+            throw Boom.badRequest('Designation Not found');
           }
-    },
+          else{
+            reply({
+              'message':'Updated Sucessfully',
+              'status':'success'
+            })
+          }
+        }).catch(err=>
+          {
+            throw Boom.internal('Updated Failed',err);
+          }
+          
+        );
+    }
 
-    fileTest:{
-      handler: function (request, reply) {
+    exports.fileTest= (request, reply)=> {
         // let buf = new Buffer(png, 'binary');
-
 // return 
 // reply(request.payload.thumbnail)
 //     .encoding('binary')
@@ -71,27 +55,5 @@ const DesignationHandler = {
           'status':'success',
           file:request.payload.thumbnail
         })
-     },
-  //    headers: {
-  //     "content-disposition": "form-data; name=\"thumbnail\"; filename=\"PhotosStorageExtension\"",
-  //     "content-type": "application/octet-stream"
-  // },
-     payload: {
-      parse: true,
-      maxBytes: 10,
-      output: "stream",
-      timeout: 300,
-      // multipart: true,
-       allow: 'multipart/form-data',
-    },
-    validate: {
-      payload: Joi.object({
-        thumbnail: Joi.any().optional().meta({ swaggerType: "file" }).required().description('image file'),
-        name:Joi.string().required(),
-      }),
-    }
-      }
-  }
-  
-  module.exports = DesignationHandler
+     }  
   
