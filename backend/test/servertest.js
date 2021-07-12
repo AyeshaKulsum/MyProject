@@ -24,7 +24,6 @@ describe('Server Testing', function () {
             })
             .then(
                 function (response) {
-                  console.log('the response',response)
                     assert.deepEqual(response.statusCode, 200);
                     expect(response.statusCode).to.equal(200);
                     expect(response.statusMessage).to.equal('OK');
@@ -42,6 +41,43 @@ describe('Server Testing', function () {
                 }
             )
     })
+})
+
+describe('Post designations', function () {
+  it('should validate if designation is saved', function () {
+      return server.injectThen({
+              method: 'POST',
+              url: '/designation',
+              payload: {
+                designation_name:'Principal'
+              }
+          })
+          .then(
+              function (response) {
+                let responsePayload=JSON.parse(response.payload)
+                  assert.deepEqual(response.statusCode, 200);
+                  expect(response.statusCode).to.equal(200);
+                  expect(response.statusMessage).to.equal('OK');
+                 assert.strictEqual(responsePayload.message,'Added new record');
+                 assert.strictEqual(responsePayload.status,'success');
+                 assert.strictEqual(responsePayload.description.designation_status,'Active');
+                 assert.strictEqual(responsePayload.description.designation_name,'Principal');
+                 expect(responsePayload.description.designation_id).to.greaterThan(0);
+              }
+          )
+  })
+
+  it('should throw bad request if required fields are not sent', function () {
+      return server.injectThen({
+              method: 'POST',
+              url: '/designation'
+          })
+          .then(
+              function (response) {
+                  assert.deepEqual(response.statusCode, 400);
+              }
+          )
+  })
 })
 
   // describe('hooks', function() {
