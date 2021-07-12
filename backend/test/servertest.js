@@ -1,20 +1,24 @@
 const assert = require('chai').assert;
 const expect = require('chai').expect;
-
 const server = require('../server.js')
-const dotenv = require('dotenv');
-dotenv.config({ path: './config.env' });
 
-server.register({
-  register: require('inject-then'),
-  options: {
-      message: 'inject-then plugin'
-  }
-}, (err) => {
-   if (err) {
-       console.log('Failed loading inject-then plugin');
-   }
-});
+
+describe('hooks', function() {
+
+      before(function() {
+        console.log('Before')
+        server.register({
+          register: require('inject-then'),
+          options: {
+              message: 'inject-then plugin'
+          }
+        }, (err) => {
+           if (err) {
+               console.log('Failed loading inject-then plugin');
+           }
+        });
+        server.start();
+    });
 
 describe('Server Testing', function () {
     it('should validate if server is running', function () {
@@ -79,7 +83,11 @@ describe('Post designations', function () {
           )
   })
 })
-
+    after(function() {
+        console.log('After')
+      server.stop();
+    });
+});
   // describe('hooks', function() {
     // before(function() {
     //     console.log('Before')
