@@ -13,14 +13,14 @@ const Designation = db.define('Designation', {
     type: Sequelize.STRING,
     allowNull: false
   },
-designation_status: {
+  designation_status: {
     type: Sequelize.STRING,
     allowNull: false,
-    defaultValue:'Active'
+    defaultValue: 'Active'
   }
 }, {
   // Other model options go here
-  tableName:  'designation',
+  tableName: 'designation',
   createdAt: false,
   updatedAt: false,
 }
@@ -30,4 +30,4 @@ designation_status: {
 // `sequelize.define` also returns the model
 // console.log(Designation === db.models.Designation);
 
-module.exports=Designation
+module.exports = Designation
