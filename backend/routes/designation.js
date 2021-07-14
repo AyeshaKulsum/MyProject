@@ -1,4 +1,4 @@
-const { fetchAllDesignations, fetchDesignationById, addDesignation, updateDesignationById, fileTest } = require('../handlers/designation')
+const { fetchAllDesignations, fetchDesignationById, addDesignation, updateDesignationById, deleteDesignationById, fileTest, searchDesignation } = require('../handlers/designation')
 const { fetchDesignationByIdValidation, addDesignationValidation, updateDesignationByIdValidation, fileTestValidation } = require('../validations/designation')
 
 const designationRoute = [
@@ -17,7 +17,7 @@ const designationRoute = [
     config: {
       handler: fetchDesignationById,
       description: 'Gets designation by id',
-      validate: fetchDesignationByIdValidation
+      validate: fetchDesignationByIdValidation,
     }
   },
 
@@ -40,6 +40,25 @@ const designationRoute = [
       validate: updateDesignationByIdValidation
     }
 
+  },
+
+  {
+    method: 'DELETE',
+    path: '/designation/{id}',
+    config: {
+      handler: deleteDesignationById,
+      description: 'Delete designation by id',
+      validate: fetchDesignationByIdValidation
+    }
+  },
+
+  {
+    method: 'GET',
+    path: '/search-designation/{name}',
+    config: {
+      handler: searchDesignation,
+      description: 'Search Designation'
+    }
   },
 
   {

@@ -66,7 +66,7 @@ describe('hooks', function () {
             assert.strictEqual(responsePayload.status, 'success');
             assert.strictEqual(responsePayload.description.designation_status, 'Active');
             assert.strictEqual(responsePayload.description.designation_name, 'Principal');
-            expect(responsePayload.description.designation_id).to.greaterThan(0);
+            expect(responsePayload.description.id).to.greaterThan(0);
           }
         )
     })

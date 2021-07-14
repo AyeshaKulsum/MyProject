@@ -2,6 +2,7 @@ var Hapi = require('hapi');
 const dotenv = require('dotenv');
 dotenv.config({ path: './config.env' });
 const designationRoute = require('./routes/designation')
+const peopleRoute = require('./routes/people')
 // create new server instance
 var server = new Hapi.Server()
 const port = process.env.PORT || 8000;
@@ -11,7 +12,7 @@ const db = require('./config/database')
 db.authenticate().then(() =>
   console.log('DB Connection has been established successfully.'))
   .catch(err => console.error('Unable to connect to the database:', err))
-
+db.sync()
 // add server’s connection information
 server.connection({
   host: process.env.HOST,
@@ -31,6 +32,7 @@ server.connection({
 
 // tell your server about the defined routes
 server.route(designationRoute);
+server.route(peopleRoute);
 
 // start your server
 server.start(function (err) {
