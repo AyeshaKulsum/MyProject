@@ -1,15 +1,14 @@
 const { Sequelize } = require('sequelize');
 const db = require('../config/database');
-const People = require('./people');
 
 const Designation = db.define('Designation', {
   // Model attributes are defined here
-  // designation_id: {
-  //   type: Sequelize.BIGINT,
-  //   allowNull: false,
-  //   primaryKey: true,
-  //   autoIncrement: true
-  // },
+  id: {
+    type: Sequelize.BIGINT,
+    allowNull: false,
+    primaryKey: true,
+    autoIncrement: true
+  },
   designation_name: {
     type: Sequelize.STRING,
     allowNull: false
@@ -24,7 +23,8 @@ const Designation = db.define('Designation', {
   // tableName: 'designation',
   // createdAt: false,
   // updatedAt: false,
-  paranoid: true,
+  underscored: true,
+  //paranoid: true,
   indexes: [
     {
       unique: false,
@@ -34,11 +34,11 @@ const Designation = db.define('Designation', {
 }
 
 );
-Designation.associate = (models) => {
-  Designation.belongsTo(models.People, {
-    allowNull: false,
-  });
-};
+// Designation.associate = (models) => {
+//   Designation.belongsTo(models.People, {
+//     allowNull: false,
+//   });
+// };
 // `sequelize.define` also returns the model
 // console.log(Designation === db.models.Designation);
 

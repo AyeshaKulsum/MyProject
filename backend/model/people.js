@@ -1,6 +1,5 @@
 const { Sequelize } = require('sequelize');
 const db = require('../config/database');
-const Designation = require('./designation');
 
 const People = db.define('People', {
     // people_id: {
@@ -40,13 +39,12 @@ const People = db.define('People', {
 })
 // People.hasOne(Designation, { foreignKey: 'people_designation_id' })
 People.associate = (models) => {
-    People.hasOne(models.Designation, {
-        // foreignKey: 'people_designation_id',
+    People.belongsTo(models.Designation, {
+        foreignKey: 'designation_id'
     })
-    // People.hasOne(Designation, {
-    //     foreignKey: 'people_designation_id',
-    //     targetKey: 'designation_id'
-    // });
 };
-
+// People.hasOne(Designation, {
+//     foreignKey: 'people_designation_id',
+//     targetKey: 'designation_id'
+// });
 module.exports = People;

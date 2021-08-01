@@ -3,42 +3,16 @@ const Boom = require('@hapi/boom');
 const Designation = require('../model/designation');
 const { QueryTypes } = require('sequelize');
 const client = require('../config/redis')
-const { fetchAllDesignationsHelper, addDesignationHelper } = require('../helpers/helper')
+const { fetchAllDesignationsHelper, addDesignationHelper, fetchAllDesignationsPostgres } = require('../helpers/helper')
 
 exports.fetchAllDesignations = async (request, reply) => {
   try {
     let designations = await fetchAllDesignationsHelper(request);
-    console.log(designations, 'desifjncsjkcnsk')
     reply(designations);
-    // fetchAllDesignationsHelper(request).then(data => {
-    //   console.log(data);
-    // })
   }
   catch (err) {
     throw Boom.internal('Failed to fetch all designations', err);
   }
-  // try {
-  //   let designations = null;
-  //   await client.get("fetchAllDesignations", async (err, value) => {
-  //     if (err) throw err;
-  //     if (value) {
-  //       console.log('Data from Redis');
-  //       designations = JSON.parse(value);
-  //       // console.log(designations);
-  //     }
-  //     else {
-  //       console.log('Data from postgres');
-  //       designations = await Designation.findAll({ paranoid: false });
-  //       await client.setex("fetchAllDesignations", 3800, JSON.stringify(designations));
-  //     }
-  //     reply({ size: designations.length, designations });
-  //   });
-
-  // }
-  // catch (err) {
-  //   throw Boom.internal('Failed to fetch all designations', err);
-  // }
-
 }
 
 exports.fetchDesignationById = async (request, reply) => {
@@ -66,6 +40,7 @@ exports.updateDesignationById = async (request, reply) => {
       throw Boom.badRequest('Designation Not found');
     }
     else {
+      designations = fetchAllDesignationsPostgres();
       reply({
         'message': 'Updated Sucessfully',
         'status': 'success'
@@ -79,11 +54,12 @@ exports.updateDesignationById = async (request, reply) => {
 }
 
 exports.deleteDesignationById = async (request, reply) => {
+  console.log('deletebackend', request.params.id);
   Designation.destroy({
     where: {
       id: request.params.id
     }
-  }).then(d => reply(d)).catch(e => reply(e))
+  }).then(d => { designations = fetchAllDesignationsPostgres(); reply(d) }).catch(e => reply(e))
 }
 exports.fileTest = (request, reply) => {
   // let buf = new Buffer(png, 'binary');

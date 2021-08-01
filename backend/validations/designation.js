@@ -18,13 +18,14 @@ exports.fetchDesignationByIdValidation = {
     },
     payload: {
       designation_name: Joi.string().min(3).max(100).required()
-    }, headers: {
-      username: Joi.string().required(),
     },
-    options: {
-      allowUnknown: true,
-      abortEarly: false
-    }
+    // headers: {
+    //   username: Joi.string().required(),
+    // },
+    // options: {
+    //   allowUnknown: true,
+    //   abortEarly: false
+    // }
   }
 
 exports.fileTestValidation = {

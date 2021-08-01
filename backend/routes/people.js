@@ -1,4 +1,4 @@
-const { fetchAllPeople, addPeople } = require('../handlers/people')
+const { fetchAllPeople, addPeople, fetchAllPeopleInfo } = require('../handlers/people')
 
 const peopleRoute = [
     {
@@ -6,10 +6,17 @@ const peopleRoute = [
         path: '/people',
         config: {
             handler: fetchAllPeople,
-            description: 'Gets all designations'
+            description: 'Gets all people'
         }
     },
-
+    {
+        method: 'GET',
+        path: '/peoples-info',
+        config: {
+            handler: fetchAllPeopleInfo,
+            description: 'Gets all people info'
+        }
+    },
     {
         method: 'POST',
         path: '/people',
