@@ -1,4 +1,5 @@
 import React from "react";
+import { useHistory } from "react-router-dom";
 import { updateDesignation, getDesignationsById } from "./helper/designation"
 
 class UpdateDesignation extends React.Component {
@@ -16,6 +17,7 @@ class UpdateDesignation extends React.Component {
 
     componentDidMount() {
         console.log('Component Did mount');
+        console.log(this.props);
         // this.setState(() => {
         //     designation_id: this.props.params.id
         // })
@@ -56,18 +58,19 @@ class UpdateDesignation extends React.Component {
         console.log(this.state.designation_name, 'this.state.designation_name')
         console.log(this.state.designation_id, 'this.state.designation_id')
         updateDesignation(this.state.designation_name, this.state.designation_id).then(data => {
-            if (!data) {
-                // setValues({ ...values });
-            } else {
-                // setValues({
-                //     ...values,
-                //     designation_name: ''
-                // });
+            this.props.history.push('/designations')
+            // if (!data) {
+            //     // setValues({ ...values });
+            // } else {
+            //     // setValues({
+            //     //     ...values,
+            //     //     designation_name: ''
+            //     // });
 
-                this.setState({
-                    designation_name: ''
-                })
-            }
+            //     this.setState({
+            //         designation_name: ''
+            //     })
+            // }
         });
     }
     handleChange = name => event => {

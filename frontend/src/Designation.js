@@ -1,23 +1,36 @@
 import { useState, useEffect } from "react"
 import { getDesignations, deleteDesignation } from "./helper/designation"
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchDesignationsFromServer } from "./redux/actions/actionCreator";
+import ACTIONS from "./redux/actions/actionsList";
 
+import { BiEditAlt, BiPlusCircle } from 'react-icons/bi'
+import { AiFillDelete } from 'react-icons/ai'
 const Designation = () => {
-    const [designations, setDesignation] = useState([])
+    // const [designations, setDesignation] = useState([])
+    const dispatch = useDispatch();
+    const designations = useSelector(state => state.designations);
+    // console.log("Designations from Store", storeDesignation)
 
     const loadDesignation = () => [
+
         getDesignations().then(data => {
             if (!data) {
                 console.log('error');
             }
             else {
                 setDesignation(data)
+                dispatch({
+                    type: ACTIONS.FETCH_DESIGNATION,
+                    payload: data
+                });
                 console.log('des', data);
             }
         })
     ]
     useEffect(() => {
-        loadDesignation()
+        dispatch(fetchDesignationsFromServer())
     }, [])
 
     const deleteThisDesignation = id => {
@@ -26,44 +39,37 @@ const Designation = () => {
             // console.log(data.error);
             // console.log('error');
             // } else {
-            loadDesignation();
+            // loadDesignation();
             // }
+            dispatch(fetchDesignationsFromServer())
         });
     };
 
 
     return (
         <div className="container">
-            <div className="text-center title text-success">Designations</div>
-            {/* {{ designations }} */}
+            <h2 className="text-center title text-bold">Designations</h2>
             <div className="row"> <div className="col-9"></div>
-                {/* <div className="float-right"> */}
-                <button className="btn btn-primary col-3  text-center ">
-                    <Link to="/create/designation" className="nav-link text-dark">
-                        Create Designation
-                    </Link>
-                </button>
-                <br />
+                {/* <button className="btn btn-primary col-3  text-center "> */}
+                <Link to="/create/designation" className="nav-link text-dark">
+                    <BiPlusCircle />
+                </Link>
 
-                {/* </div> */}
+                {/* </button> */}
+                <br />
             </div>
 
 
-            {designations.map((designation, index) => {
-                return (
-                    <div key={index} className="row text-center mb-2 border border-success">
-                        <div className="col-10">
+            {/* <div key={designation.designation_id} className="card text-white bg-dark border border-info">
+                        <div className="card-header lead">Designation</div>
+                        <div className="card-body">
                             <h3 className="text-success">{designation.designation_name}</h3>
-                        </div>
-                        <div className="col-1">
                             <Link
                                 className="btn btn-success"
                                 to={`/designation/update/${designation.id}`}
                             >
                                 <span className="">Update</span>
                             </Link>
-                        </div>
-                        <div className="col-1">
                             <button
                                 onClick={() => {
                                     deleteThisDesignation(designation.id);
@@ -73,9 +79,47 @@ const Designation = () => {
                                 Delete
                             </button>
                         </div>
-                    </div>
-                );
+                        );
             })}
+                    </div>
+                )
+            } */}
+
+            <div className="row">
+                {designations.map((designation) => {
+                    return (
+                        <div key={designation.designation_id} className="card col-3 mx-4 my-1 text-white bg-dark border border-info">
+                            {/* <div className="card-header lead ">Designation</div> */}
+                            <div className="card-body">
+                                <h3 className="text-white text-center">{designation.designation_name}</h3>
+                            </div>
+                            {/* <AiTwotoneEdit></AiTwotoneEdit> */}
+
+
+
+                            <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                <Link className="text-white"
+
+                                    to={`/designation/update/${designation.id}`}
+                                >
+                                    <span style={{ width: '40px' }}> <BiEditAlt /></span>
+                                </Link>
+                                <Link className="text-white"> <AiFillDelete onClick={() => {
+                                    deleteThisDesignation(designation.id);
+                                }}></AiFillDelete></Link>
+                            </div>
+
+                            {/* <button
+
+                                className="btn btn-danger"
+                            >
+
+                            </button> */}
+                        </div>
+                    );
+                })}
+            </div>
+
         </div>
     )
 }

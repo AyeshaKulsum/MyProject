@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { addDesignation } from "./helper/designation"
+import { useSelector, useDispatch } from 'react-redux'
+import { useHistory } from "react-router-dom";
 
 const AddDesignation = () => {
 
@@ -8,20 +10,27 @@ const AddDesignation = () => {
         // formData: new FormData()
     })
 
+    const history = useHistory();
     const { designation_name } = values;
+    // const designation_name = useSelector(state => state.ADD_DESIGNATION.designation_name)
+    // const dispatch = useDispatch()
 
     const onSubmit = event => {
         event.preventDefault();
         console.log('values', values)
         addDesignation({ designation_name }).then(data => {
-            if (!data) {
-                // setValues({ ...values });
-            } else {
-                setValues({
-                    ...values,
-                    designation_name: ''
-                });
-            }
+            history.push('/designations')
+
+            // if (!data) {
+            //     // setValues({ ...values });
+            // } else {
+            //     // dispatch(onSubmit())
+            //     setValues({
+            //         ...values,
+            //         designation_name: ''
+            //     });
+            //     history.push('/designations')
+            // }
         });
     }
     const handleChange = name => event => {
@@ -29,6 +38,7 @@ const AddDesignation = () => {
         event.preventDefault();
         console.log('target', event.target.value);
         setValues({ ...values, designation_name: event.target.value });
+        // dispatch(handleChange(event.target.value))
         console.log('values1', values)
     }
     const createDesignationForm = () => (
